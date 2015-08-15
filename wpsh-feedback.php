@@ -9,6 +9,37 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Author URI: http://wpsheffield.com
  */
 
+
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// ORemove feedback from standard comments
+//
+// 
+//-----------------------------------------------------------------------------------------------
+
+
+//add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 20, 1);
+//function wpsh_exclude_feedback( $clauses ) {
+
+    // Hide all those comments which aren't of type feedback
+ //   $clauses['where'] .= ' AND comment_type != "feedback"';   
+
+ //   return $clauses;
+//}
+
+
+//add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 10, 2 );
+//$comments = get_comments();
+//remove_filter( 'comments_clauses', 'wpsh_exclude_feedback' );
+ 
+//function wpsh_exclude_feedback( $clauses, $wp_comment_query ) {
+//	$clauses['where'] .= ' AND comment_type != "feedback"';   
+//    return $clauses;
+//}
+
+
+
+
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
 // First of all check if hidden field for custom comment type
@@ -362,34 +393,6 @@ function wpsh_display_feedback() {
 
 }
 
-
-//-----------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------
-// ORemove feedback from standard comments
-//
-// 
-//-----------------------------------------------------------------------------------------------
-
-/*
-add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 10, 1);
-function wpsh_exclude_feedback( $clauses ) {
-
-    // Hide all those comments which aren't of type system_message
-    $clauses['where'] .= ' AND comment_type != "feedback"';   
-
-    return $clauses;
-}
-*
-
-//add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 10, 2 );
-//$comments = get_comments();
-//remove_filter( 'comments_clauses', 'wpsh_exclude_feedback' );
- 
-//function wpsh_exclude_feedback( $clauses, $wp_comment_query ) {
-//	$clauses['where'] .= ' AND comment_type != "feedback"';   
-//    return $clauses;
-//}
-
-
+add_action( 'wp_footer', 'wpsh_display_feedback', 100 );
 
 ?>
