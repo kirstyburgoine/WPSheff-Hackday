@@ -41,7 +41,8 @@ function set_comment_type( $comment_data ) {
 }
 */
 
-
+// Create a new comment form instead of using the existing so that new fields can be added without 
+// that data being added to the standard comments
 function wpsh_feedback_form( $args = array(), $post_id = null ) {
 
 	if ( null === $post_id )
