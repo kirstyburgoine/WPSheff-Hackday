@@ -124,6 +124,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 	if ( ! isset( $args['format'] ) )
 		$args['format'] = current_theme_supports( 'html5', 'comment-form' ) ? 'html5' : 'xhtml';
 
+/* Not required for this form
 	$req      = get_option( 'require_name_email' );
 	$aria_req = ( $req ? " aria-required='true'" : '' );
 	$html_req = ( $req ? " required='required'" : '' );
@@ -138,7 +139,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 		);
 
 	$required_text = sprintf( ' ' . __('Required fields are marked %s'), '<span class="required">*</span>' );
-
+*/ 
 	/**
 	 * Filter the default comment form fields.
 	 *
@@ -149,18 +150,21 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 	$fields = apply_filters( 'comment_form_default_fields', $fields );
 	$defaults = array(
 		'fields'               => $fields,
-		'comment_field'        => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" aria-describedby="form-allowed-tags" aria-required="true" required="required"></textarea></p>',
+		'comment_field'        => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" aria-describedby="form-allowed-tags" aria-required="true" required="required"></textarea></p>',
 		/** This filter is documented in wp-includes/link-template.php */
 		'must_log_in'          => '<p class="must-log-in">' . sprintf( __( 'You must be <a href="%s">logged in</a> to post a comment.' ), wp_login_url( apply_filters( 'the_permalink', get_permalink( $post_id ) ) ) ) . '</p>',
 		/** This filter is documented in wp-includes/link-template.php */
-		'logged_in_as'         => '<p class="logged-in-as">' . sprintf( __( 'Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>' ), get_edit_user_link(), $user_identity, wp_logout_url( apply_filters( 'the_permalink', get_permalink( $post_id ) ) ) ) . '</p>',
-		'comment_notes_before' => '<p class="comment-notes"><span id="email-notes">' . __( 'Your email address will not be published.' ) . '</span>'. ( $req ? $required_text : '' ) . '</p>',
-		'comment_notes_after'  => '<p class="form-allowed-tags" id="form-allowed-tags">' . sprintf( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes: %s' ), ' <code>' . allowed_tags() . '</code>' ) . '</p>',
+	//	'logged_in_as'         => '<p class="logged-in-as">' . sprintf( __( 'Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>' ), get_edit_user_link(), $user_identity, wp_logout_url( apply_filters( 'the_permalink', get_permalink( $post_id ) ) ) ) . '</p>',
+	//	'comment_notes_before' => '<p class="comment-notes"><span id="email-notes">' . __( 'Your email address will not be published.' ) . '</span>'. ( $req ? $required_text : '' ) . '</p>',
+	//	'comment_notes_after'  => '<p class="form-allowed-tags" id="form-allowed-tags">' . sprintf( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes: %s' ), ' <code>' . allowed_tags() . '</code>' ) . '</p>',
+		'logged_in_as'         => '',
+		'comment_notes_before' => '',
+		'comment_notes_after'  => '',
 		'id_form'              => 'wpsh_feedbackform',
 		'id_submit'            => 'submit',
 		'class_submit'         => 'submit',
 		'name_submit'          => 'submit',
-		'title_reply'          => __( 'Leave a Reply' ),
+		'title_reply'          => __( 'Leave feedback' ),
 		'title_reply_to'       => __( 'Leave a Reply to %s' ),
 		'cancel_reply_link'    => __( 'Cancel reply' ),
 		'label_submit'         => __( 'Post Comment' ),
@@ -370,23 +374,22 @@ function wpsh_display_feedback() {
 	$comments_query = new WP_Comment_Query;
 	$comments = $comments_query->query( $args );
 
-	var_dump($comments);
-
 	// Comment Loop
 	if ( $comments ) {
+		echo '<div id="wpsh-feedback-threads">';
 		foreach ( $comments as $comment ) {
-
-			echo "<hr />";
-			//echo get_avatar( $comment, $args['avatar_size'] );
+			echo '<div class="wpsh-feedback-thread" id="comment-'.$comment->comment_ID.'">';
+			echo get_avatar( $comment, $args['avatar_size'] );
 			echo '<p><strong>Feedback from: ' . $comment->comment_author .'</strong></p>';
 			echo '<p>' . $comment->comment_content . '</p>';
-			//echo '<small>' . $comment->comment_type . '</small>';
 
 			if (current_user_can( 'manage_options' )) :
 				echo '<p><small><strong>Admin Details:</strong>' . $comment->comment_agent . '</small></p>';
 			endif;
+			echo '</div>';
 
 		}
+		echo '</div>';
 	} else {
 		echo 'No comments found.';
 	}
