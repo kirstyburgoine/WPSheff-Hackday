@@ -152,7 +152,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 	// Ensure that the filtered args contain all required default values.
 	$args = array_merge( $defaults, $args );
 
-		if ( comments_open( $post_id ) ) : ?>
+		//if ( comments_open( $post_id ) ) : ?>
 			<?php
 			/**
 			 * Fires before the comment form.
@@ -161,7 +161,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 			 */
 			do_action( 'comment_form_before' );
 			?>
-			<div id="respond" class="comment-respond">
+			<div id="wpsh_feedback" class="comment-respond wpsh_feedback" style="display:none;">
 				<h3 id="reply-title" class="comment-reply-title"><?php comment_form_title( $args['title_reply'], $args['title_reply_to'] ); ?> <small><?php cancel_comment_reply_link( $args['cancel_reply_link'] ); ?></small></h3>
 				<?php if ( get_option( 'comment_registration' ) && !is_user_logged_in() ) : ?>
 					<?php echo $args['must_log_in']; ?>
@@ -310,14 +310,14 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 			 * @since 3.0.0
 			 */
 			do_action( 'comment_form_after' );
-		else :
+		//else :
 			/**
 			 * Fires after the comment form if comments are closed.
 			 *
 			 * @since 3.0.0
 			 */
-			do_action( 'comment_form_comments_closed' );
-		endif;
+		//	do_action( 'comment_form_comments_closed' );
+		//endif;
 }
 
 
