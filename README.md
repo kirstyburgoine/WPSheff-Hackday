@@ -3,7 +3,6 @@ Repository for Feedback Plugin built for the WordPress Sheffield Hackday on 15.0
 
 ## Objectives Still Do / Future Development
 
-* Scroll to comment ID
 * Position  box on left if too close to edge
 * Fix feedback comment type from appearing in normal comments
 * Capabilities
@@ -20,3 +19,4 @@ Repository for Feedback Plugin built for the WordPress Sheffield Hackday on 15.0
 * What if element moved or deleted
 * Fall back for co-ordinates if no elements
 
+Public Trello board: https://trello.com/b/9J053vo2/wpsheff-hackday
