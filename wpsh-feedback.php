@@ -41,9 +41,8 @@ function set_comment_type( $comment_data ) {
 }
 */
 
-// Create new form so we can have hidden fields without affecting the standard WP Comment system
-// This code has been lifterd from wp-includes/content-template.php
-function feedback_form( $args = array(), $post_id = null ) {
+
+function wpsh_feedback_form( $args = array(), $post_id = null ) {
 
 	if ( null === $post_id )
 		$post_id = get_the_ID();
