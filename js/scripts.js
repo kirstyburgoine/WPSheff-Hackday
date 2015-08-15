@@ -69,6 +69,9 @@ $(document).ready(function(){
 
 	});
 
+	// Quick hack to remove feedback comments from regular comments
+	$('#comments li.feedback').remove();
+
 
 // end document ready
 });
