@@ -337,7 +337,7 @@ function wpsh_display_feedback() {
 	$comments_query = new WP_Comment_Query;
 	$comments = $comments_query->query( $args );
 
-	var_dump($comments);
+	//var_dump($comments);
 
 	// Comment Loop
 	if ( $comments ) {
