@@ -9,19 +9,26 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Author URI: http://wpsheffield.com
  */
 
-// New data for comment type passed through hidden field on comment form
-$comment_type = $_POST['new_comment_type'];
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// First of all check if hidden field for custom comment type
+//
+//-----------------------------------------------------------------------------------------------
+// Check that this is the feedback comment form by chekcing the hidden field for comment type
 
-function preprocess_comment_handler( $commentdata ) {
+$comment_type = $_POST['new_comment_type'];
+//echo "Test" . $comment_type;
+
+function wpsh_update_comment_type( $commentdata ) {
     
     // Check if the parameter is passed through the form
-    if (  !isset( $_POST['new_comment_type'] ) ) {
+   	if (  !isset( $_POST['new_comment_type'] ) ) {
     // If not return the standard comment_data
-            return $comment_data;
+   	         return $commentdata;
     
     } else {
     	// else unset the comment type and set it to feedback
-    	unset( $commentdata['comment_type'] );
+    	//unset( $commentdata['comment_type'] );
     	$commentdata['comment_type'] = 'feedback';
 
     	return $commentdata;
@@ -29,17 +36,47 @@ function preprocess_comment_handler( $commentdata ) {
 }
 
 
-/*
-function set_comment_type( $comment_data ) {
+add_filter( 'preprocess_comment' , 'wpsh_update_comment_type', 10, 1 );
 
-        if (  !isset( $_POST['comment_type'] ) ) {
-            return $comment_data;
-        }
-        if ( get_post_type( $comment_data['comment_post_ID'] ) != matchCPT::$post_type ){
-            return $comment_data;
-        }
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// Create a new comment form with new hidden fields
+//
+// 
+//-----------------------------------------------------------------------------------------------
+// Change the hidden fields away from the defaults in the feedback form
+function wpsh_get_comment_id_fields( $id = 0 ) {
+	if ( empty( $id ) )
+		$id = get_the_ID();
+
+	$replytoid = isset($_GET['replytocom']) ? (int) $_GET['replytocom'] : 0;
+	$result  = "<input type='hidden' name='comment_post_ID' value='$id' id='comment_post_ID' />\n";
+	$result .= "<input type='hidden' name='comment_parent' id='comment_parent' value='$replytoid' />\n";
+	$result .= "<input type='hidden' name='new_comment_type' id='new_comment_type' value='feedback' />\n";
+
+	/**
+	 * Filter the returned comment id fields.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $result    The HTML-formatted hidden id field comment elements.
+	 * @param int    $id        The post ID.
+	 * @param int    $replytoid The id of the comment being replied to.
+	 */
+	return apply_filters( 'comment_id_fields', $result, $id, $replytoid );
 }
-*/
+
+/**
+ * Output hidden input HTML for replying to comments.
+ *
+ * @since 2.7.0
+ *
+ * @param int $id Optional. Post ID. Default current post ID.
+ */
+function wpsh_comment_id_fields( $id = 0 ) {
+	echo wpsh_get_comment_id_fields( $id );
+}
+
 
 // Create a new comment form instead of using the existing so that new fields can be added without 
 // that data being added to the standard comments
@@ -67,7 +104,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 		            '<input id="email" name="email" ' . ( $html5 ? 'type="email"' : 'type="text"' ) . ' value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30" aria-describedby="email-notes"' . $aria_req . $html_req  . ' /></p>',
 		'url'    => '<p class="comment-form-url"><label for="url">' . __( 'Website' ) . '</label> ' .
 		            '<input id="url" name="url" ' . ( $html5 ? 'type="url"' : 'type="text"' ) . ' value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" /></p>',
-	);
+		);
 
 	$required_text = sprintf( ' ' . __('Required fields are marked %s'), '<span class="required">*</span>' );
 
@@ -238,7 +275,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 						$submit_field = sprintf(
 							$args['submit_field'],
 							$submit_button,
-							get_comment_id_fields( $post_id )
+							wpsh_get_comment_id_fields( $post_id )
 						);
 
 						/**
@@ -281,5 +318,35 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 			 */
 			do_action( 'comment_form_comments_closed' );
 		endif;
+}
+
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// Output the new comments
+//
+// 
+//-----------------------------------------------------------------------------------------------
+
+function wpsh_display_feedback() {
+
+	$args = array(
+	   // args here
+	);
+
+	// The Query
+	$comments_query = new WP_Comment_Query;
+	$comments = $comments_query->query( $args );
+
+	var_dump($comments);
+
+	// Comment Loop
+	if ( $comments ) {
+		foreach ( $comments as $comment ) {
+			echo '<p>' . $comment->comment_content . '<br />' . $comment->comment_type . '</p>';
+		}
+	} else {
+		echo 'No comments found.';
 	}
+
+}
 ?>
