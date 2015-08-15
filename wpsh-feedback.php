@@ -9,43 +9,22 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Author URI: http://wpsheffield.com
  */
 
-/*
-// WP_Comment_Query arguments
-$args = array (
-	'type' => 'feedback',
-	'status' => 'approve'
-);
-
-// The Comment Query
-$comment_query = new WP_Comment_Query;
-$comments = $comment_query->query( $args );
-
-
-// Comment Loop
-if ( $comments ) {
-	foreach ( $comments as $comment ) {
-		echo '<p>' . $comment->comment_content . '</p>';
-	}
-} else {
-	echo 'No comments found.';
-} */
-
+// New data for comment type passed through hidden field on comment form
 $comment_type = $_POST['new_comment_type'];
 
 function preprocess_comment_handler( $commentdata ) {
     
-    unset( $commentdata['comment_type'] );
-    return $commentdata;
-}
-add_filter( 'preprocess_comment' , 'preprocess_comment_handler' );
-
-function set_comment_type( $comment_data ) {
-
-        if (  !isset( $_POST['comment_type'] ) ) {
+    // Check if the parameter is passed through the form
+    if (  !isset( $_POST['new_comment_type'] ) ) {
+    // If not return the standard comment_data
             return $comment_data;
-        }
-        if ( get_post_type( $comment_data['comment_post_ID'] ) != matchCPT::$post_type ){
-            return $comment_data;
-        }
+    
+    } else {
+    	// else unset the comment type and set it to feedback
+    	unset( $commentdata['comment_type'] );
+    	$commentdata['comment_type'] = 'feedback';
+
+    	return $commentdata;
+	}
 }
 ?>
