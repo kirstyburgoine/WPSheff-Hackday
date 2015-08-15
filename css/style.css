@@ -1,0 +1,11 @@
+.wpsh-fbb-wrap {position:relative;}
+.wpsh-fbb-current-target {outline:3px solid #069;}
+.wpsh-fbb {position:absolute;background:#fff;border:3px solid #099;padding:10px 20px;z-index:999;font:20px/1.5 Arial;color:#000;min-width:320px;max-width:500px;}
+.wpsh-fbb.auto-position {top:100%;left:50%;transform:translate(-50%,0);}
+.wpsh-fbb h2 {margin:0 0 20px;}
+.wpsh-fbb form {padding:0;margin:0 0 20px;}
+.wpsh-fbb p {margin:0 0 20px;}
+.wpsh-fbb textarea {overflow:hidden;font:14px/1.5 Arial;margin-bottom:20px;}
+
+#wpsh-feedback-threads {position:relative;clear:both;background:#fff;border-top:5px solid #999;}
+.wpsh-feedback-thread {max-width:800px;padding:30px 50px;margin:0 auto;border-bottom:1px solid #ccc;}

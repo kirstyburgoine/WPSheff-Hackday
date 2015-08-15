@@ -398,4 +398,21 @@ function wpsh_display_feedback() {
 
 add_action( 'wp_footer', 'wpsh_display_feedback', 100 );
 
+
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// Add styling and scripts
+//
+// 
+//-----------------------------------------------------------------------------------------------
+
+// Enqueue styling and scripts
+	if (!is_admin()) add_action('wp_enqueue_scripts', 'wpsh_enqueue_scripts');
+	function wpsh_enqueue_scripts() {
+	 	wp_enqueue_script('wpsh-js', plugins_url( '/js/scripts.js' , __FILE__ ), array('jquery'), '1.0.0', true );
+	 	wp_enqueue_style('wpsh-css', plugins_url( '/css/style.css' , __FILE__ ));
+	}
+
+
+
 ?>
