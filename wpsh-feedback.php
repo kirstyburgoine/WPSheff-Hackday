@@ -125,7 +125,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 		'logged_in_as'         => '<p class="logged-in-as">' . sprintf( __( 'Logged in as <a href="%1$s">%2$s</a>. <a href="%3$s" title="Log out of this account">Log out?</a>' ), get_edit_user_link(), $user_identity, wp_logout_url( apply_filters( 'the_permalink', get_permalink( $post_id ) ) ) ) . '</p>',
 		'comment_notes_before' => '<p class="comment-notes"><span id="email-notes">' . __( 'Your email address will not be published.' ) . '</span>'. ( $req ? $required_text : '' ) . '</p>',
 		'comment_notes_after'  => '<p class="form-allowed-tags" id="form-allowed-tags">' . sprintf( __( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes: %s' ), ' <code>' . allowed_tags() . '</code>' ) . '</p>',
-		'id_form'              => 'commentform',
+		'id_form'              => 'wpsh_feedbackform',
 		'id_submit'            => 'submit',
 		'class_submit'         => 'submit',
 		'name_submit'          => 'submit',
@@ -319,6 +319,9 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 			do_action( 'comment_form_comments_closed' );
 		endif;
 }
+
+
+add_action( 'wp_footer', 'wpsh_feedback_form', 100 );
 
 //-----------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------
