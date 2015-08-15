@@ -162,7 +162,6 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 			do_action( 'comment_form_before' );
 			?>
 			<div id="wpsh_feedback" class="comment-respond wpsh_feedback" style="display:none;">
-				<h3 id="reply-title" class="comment-reply-title"><?php comment_form_title( $args['title_reply'], $args['title_reply_to'] ); ?> <small><?php cancel_comment_reply_link( $args['cancel_reply_link'] ); ?></small></h3>
 				<?php if ( get_option( 'comment_registration' ) && !is_user_logged_in() ) : ?>
 					<?php echo $args['must_log_in']; ?>
 					<?php
@@ -302,7 +301,7 @@ function wpsh_feedback_form( $args = array(), $post_id = null ) {
 						?>
 					</form>
 				<?php endif; ?>
-			</div><!-- #respond -->
+			</div><!-- #feedback -->
 			<?php
 			/**
 			 * Fires after the comment form.
@@ -333,23 +332,64 @@ add_action( 'wp_footer', 'wpsh_feedback_form', 100 );
 function wpsh_display_feedback() {
 
 	$args = array(
-	   // args here
+	   'type' => 'feedback'
 	);
 
 	// The Query
 	$comments_query = new WP_Comment_Query;
 	$comments = $comments_query->query( $args );
 
-	//var_dump($comments);
+	var_dump($comments);
 
 	// Comment Loop
 	if ( $comments ) {
 		foreach ( $comments as $comment ) {
-			echo '<p>' . $comment->comment_content . '<br />' . $comment->comment_type . '</p>';
+
+			echo "<hr />";
+			//echo get_avatar( $comment, $args['avatar_size'] );
+			echo '<p><strong>Feedback from: ' . $comment->comment_author .'</strong></p>';
+			echo '<p>' . $comment->comment_content . '</p>';
+			//echo '<small>' . $comment->comment_type . '</small>';
+
+			if (current_user_can( 'manage_options' )) :
+				echo '<p><small><strong>Admin Details:</strong>' . $comment->comment_agent . '</small></p>';
+			endif;
+
 		}
 	} else {
 		echo 'No comments found.';
 	}
 
 }
+
+
+//-----------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
+// ORemove feedback from standard comments
+//
+// 
+//-----------------------------------------------------------------------------------------------
+
+/*
+add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 10, 1);
+function wpsh_exclude_feedback( $clauses ) {
+
+    // Hide all those comments which aren't of type system_message
+    $clauses['where'] .= ' AND comment_type != "feedback"';   
+
+    return $clauses;
+}
+*
+
+//add_filter( 'comments_clauses', 'wpsh_exclude_feedback', 10, 2 );
+//$comments = get_comments();
+//remove_filter( 'comments_clauses', 'wpsh_exclude_feedback' );
+ 
+//function wpsh_exclude_feedback( $clauses, $wp_comment_query ) {
+//	$clauses['where'] .= ' AND comment_type != "feedback"';   
+//    return $clauses;
+//}
+
+
+
 ?>
